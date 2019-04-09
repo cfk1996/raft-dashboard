@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>RAFT_DASHBOARD</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/jumbotron.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">RAFT_DASHBOARD</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>console</h2>
+                <form class="form-inline">
+                        <div class="form-group">
+                          <label for="data">Data&nbsp&nbsp</label>
+                          <input type="text" class="form-control" id="data">
+                        </div>
+                        <button onclick="append()" type="button" class="btn btn-success">Append to Log</button>
+                </form>
+                <p></p>
+                <p></p>
+                <form class="form-inline">
+                        <div class="form-group">
+                          <label for="index1">index</label>
+                          <input type="text" class="form-control" id="index1">
+                        </div>
+                        <button onclick="getByRaft()" type="button" class="btn btn-success">&nbsp&nbspGet by Raft&nbsp&nbsp&nbsp</button>
+                </form>  
+                <p></p>
+                <p></p>
+                <form class="form-inline">
+                        <div class="form-group">
+                          <label for="index2">index</label>
+                          <input type="text" class="form-control" id="index2">
+                        </div>
+                        <button onclick="getById()" type="button" class="btn btn-success">Get per Server</button>
+                </form>  
+            </div>
+            <div id="raft" class="col-md-6">
+                <div id="raft-alert"></div>
+                <h2>Taken as a whole</h2>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr class="success">
+                            <th>index</th>
+                            <th>term</th>
+                            <th>log-data</th>
+                        </tr>
+                    </thead>
+                    <tbody id="raft-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div id="server0" class="col-md-4">
+            <div id="n0-alert"></div>
+          <h2>raft-server0</h2>
+          <table class="table table-striped table-bordered table-hover">
+                <thead>
+                  <tr class="success">
+                    <th>index</th>
+                    <th>term</th>
+                    <th>log-data</th>
+                  </tr>
+                </thead>
+                <tbody id="n0-body">
+                </tbody>
+              </table>
+        </div>
+        <div id="server1" class="col-md-4">
+            <div id="n1-alert"></div>
+          <h2>raft-server1</h2>  
+          <table class="table table-striped table-bordered table-hover">
+                <thead>
+                  <tr class="success">
+                    <th>index</th>
+                    <th>term</th>
+                    <th>log-data</th>
+                  </tr>
+                </thead>
+                <tbody id="n1-body">
+                </tbody>
+              </table>
+        </div>
+        <div id="server2" class="col-md-4">
+            <div id="n2-alert"></div>
+          <h2>raft-server2</h2>
+          <table class="table table-striped table-bordered table-hover">
+                <thead>
+                  <tr class="success">
+                    <th>index</th>
+                    <th>term</th>
+                    <th>log-data</th>
+                  </tr>
+                </thead>
+                <tbody id="n2-body">
+                </tbody>
+              </table>
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+
+    <div id="response1" class="container">
+        <div id="response2" class="col-md-12">
+            <h2>HTTP Response</h2>
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr class="success">
+                    <th>request</th>
+                    <th>server</th>
+                    <th>code</th>
+                    <th>msg</th>
+                    <th>response</th>
+                </tr>
+                </thead>
+                <tbody id="response-body">
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <footer>
+            <p>&copy; 2019, chenfeikun.</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="./js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+  </body>
+
+  <script>
+      function append() {
+          console.log("append");
+          var logData = document.getElementById("data").value;
+          if (logData.replace(/(^\s*)|(\s*$)/g, "").length ==0) { 
+              alert('data不能为空');
+              return; 
+          }
+
+          $.ajax({
+              type: 'POST',
+              url: "/append",
+              contentType:"application/json; charset=utf-8",
+              data: JSON.stringify({
+                  'data': logData
+              }),
+              dataType: 'json',
+              success: function(data, status) {
+                  responseBody('append', 'raft', data);
+                  var code = data['code'];
+                  if (code != 200) {
+                      var html = "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">\n" +
+                          "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n" +
+                          data['msg'] +
+                          "</div>";
+                      document.getElementById("raft-alert").innerHTML=html;
+                      return;
+                  }
+              },
+              error: function (data, status) {
+                  alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                  return;
+              }
+          });
+      }
+
+      function getById() {
+          console.log("get id");
+          var index = document.getElementById("index2").value;
+          if (index.replace(/(^\s*)|(\s*$)/g, "").length ==0) { 
+              alert('index不能为空');
+              return; 
+          }
+          if (Number.isNaN(Number(index))) {
+              alert("index 需要为整数");
+              return;
+          }
+          var lists = ['n0', 'n1', 'n2'];
+          for (let i in lists) {
+              let server = lists[i];
+              $.ajax({
+                  type: 'GET',
+                  url: '/get/' + lists[i] + "?index=" + index,
+                  dataType: 'json',
+                  success: function (data, status) {
+                      responseBody('get', server, data);
+                      var code = data['code'];
+                      if (code != 200) {
+                          var html = "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">\n" +
+                              "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n" +
+                              data['msg'] +
+                              "</div>";
+                          $("#"+server+"-alert").innerHTML=html;
+                          return;
+                      }
+                      var entry = data['response']['entries'][0];
+                      var html;
+                      if (entry != null) {
+                          html = "<tr>\n" +
+                              "<td>" + index +"</td>\n" +
+                              "<td>" + entry['term'] + "</td>\n" +
+                              "<td>" + String(entry['data']) + "</td>\n" +
+                              "</tr>";
+                      } else {
+                          html = "<tr>\n" +
+                              "<td>" + index + "</td>\n" +
+                              "<td>null</td>\n" +
+                              "<td>null</td>\n" +
+                              "</tr>";
+                      }
+                      $('#' +server+'-body').append(html);
+                  },
+                  error: function (data, status) {
+                      alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                      return;
+                  }
+              });
+          }
+      }
+
+      function getByRaft() {
+          console.log("get raft");
+          var index = document.getElementById("index1").value;
+          if (index.replace(/(^\s*)|(\s*$)/g, "").length ==0) {
+              alert('index不能为空');
+              return;
+          }
+          if (Number.isNaN(Number(index))) {
+              alert("index 需要为整数");
+              return;
+          }
+          $.ajax({
+              type: 'GET',
+              url: '/get?index=' + index,
+              dataType: 'json',
+              success: function (data, status) {
+                  responseBody('get', 'raft', data);
+                  var code = data['code'];
+                  if (code != 200) {
+                      var html = "<div class=\"alert alert-danger alert-dismissible\" role=\"alert\">\n" +
+                          "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n" +
+                          data['msg'] +
+                          "</div>";
+                      $("#raft-alert").innerHTML=html;
+                      return;
+                  }
+                  var entry = data['response']['entries'][0];
+                  var html;
+                  if (entry != null) {
+                      html = "<tr>\n" +
+                          "<td>" + index +"</td>\n" +
+                          "<td>" + entry['term'] + "</td>\n" +
+                          "<td>" + String(entry['data']) + "</td>\n" +
+                          "</tr>";
+                  } else {
+                      html = "<tr>\n" +
+                          "<td>" + index + "</td>\n" +
+                          "<td>null</td>\n" +
+                          "<td>null</td>\n" +
+                          "</tr>";
+                  }
+                  $('#raft-body').append(html);
+              },
+              error: function (data, status) {
+                  alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                  return;
+              }
+          });
+      }
+
+      function responseBody(request, server, data) {
+
+          var html = "<tr>\n" +
+              "<td>" + request + "</td>\n" +
+              "<td>" + server + "</td>\n" +
+              "<td>" + data['code'] + "</td>\n" +
+              "<td>" + data['msg'] + "</td>\n" +
+              "<td>" + JSON.stringify(data['response']) + "</td>\n" +
+              "</tr>";
+          $("#response-body").append(html);
+      }
+  </script>
+</html>
