@@ -73,6 +73,7 @@
                             <th>index</th>
                             <th>term</th>
                             <th>log-data</th>
+                            <th>leader</th>
                         </tr>
                     </thead>
                     <tbody id="raft-body">
@@ -231,6 +232,12 @@
                               data['msg'] +
                               "</div>";
                           $("#"+server+"-alert").innerHTML=html;
+                          html = "<tr>\n" +
+                              "<td>" + index + "</td>\n" +
+                              "<td>" + data['msg'] + "</td>\n" +
+                              "<td></td>"+
+                              "</tr>";
+                          $('#'+server+'-body').append(html);
                           return;
                       }
                       var entry = data['response']['entries'][0];
@@ -281,7 +288,7 @@
                           "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n" +
                           data['msg'] +
                           "</div>";
-                      $("#raft-alert").innerHTML=html;
+                      document.getElementById("raft-alert").innerHTML=html;
                       return;
                   }
                   var entry = data['response']['entries'][0];
@@ -291,12 +298,14 @@
                           "<td>" + index +"</td>\n" +
                           "<td>" + entry['term'] + "</td>\n" +
                           "<td>" + String(entry['data']) + "</td>\n" +
+                          "<td>" + data['response']['leaderId'] + "</td>" +
                           "</tr>";
                   } else {
                       html = "<tr>\n" +
                           "<td>" + index + "</td>\n" +
                           "<td>null</td>\n" +
                           "<td>null</td>\n" +
+                          "<td>" + data['response']['leaderId'] + "</td>" +
                           "</tr>";
                   }
                   $('#raft-body').append(html);
