@@ -24,7 +24,9 @@ public class RaftClient {
 
     private static final Logger logger = LoggerFactory.getLogger(RaftClient.class);
 
-    private static final String PEERS = "n0-localhost:10001;n1-localhost:10002;n2-localhost:10003";
+    // private String peers = "n0-localhost:10001;n1-localhost:10002;n2-localhost:10003"
+    private static final String PEERS = "n0-47.95.203.78:10000;n1-47.100.116.173:10001;n2-47.100.116.173:10002;" +
+            "n3-188.131.174.223:10000;n4-188.131.174.223:10001";
     private static final String DEFAULT_GROUP = "default";
 
     private RemotingClient rpcClient;

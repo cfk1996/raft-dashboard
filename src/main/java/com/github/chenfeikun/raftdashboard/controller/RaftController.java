@@ -32,6 +32,11 @@ public class RaftController {
         return new ModelAndView("index");
     }
 
+    @GetMapping("/five")
+    public ModelAndView indexFor5Server() {
+        return new ModelAndView("server5");
+    }
+
     @PostMapping("/append")
     public Response<AppendEntryResponse> appendLog(@RequestBody Map<String, String> reqMap) {
         String data = reqMap.get("data");

@@ -53,7 +53,7 @@
                           <input type="text" class="form-control" id="index1">
                         </div>
                         <button onclick="getByRaft()" type="button" class="btn btn-success">&nbsp&nbspGet by Raft&nbsp&nbsp&nbsp</button>
-                </form>  
+                </form>
                 <p></p>
                 <p></p>
                 <form class="form-inline">
@@ -62,7 +62,7 @@
                           <input type="text" class="form-control" id="index2">
                         </div>
                         <button onclick="getById()" type="button" class="btn btn-success">Get per Server</button>
-                </form>  
+                </form>
             </div>
             <div id="raft" class="col-md-6">
                 <div id="raft-alert"></div>
@@ -104,7 +104,7 @@
         </div>
         <div id="server1" class="col-md-4">
             <div id="n1-alert"></div>
-          <h2>raft-server1</h2>  
+          <h2>raft-server1</h2>
           <table class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr class="success">
@@ -132,6 +132,36 @@
                 </tbody>
               </table>
         </div>
+          <div id="server3" class="col-md-4">
+              <div id="n3-alert"></div>
+              <h2>raft-server3</h2>
+              <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                  <tr class="success">
+                      <th>index</th>
+                      <th>term</th>
+                      <th>log-data</th>
+                  </tr>
+                  </thead>
+                  <tbody id="n3-body">
+                  </tbody>
+              </table>
+          </div>
+          <div id="server4" class="col-md-4">
+              <div id="n4-alert"></div>
+              <h2>raft-server4</h2>
+              <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                  <tr class="success">
+                      <th>index</th>
+                      <th>term</th>
+                      <th>log-data</th>
+                  </tr>
+                  </thead>
+                  <tbody id="n4-body">
+                  </tbody>
+              </table>
+          </div>
       </div>
 
     </div> <!-- /container -->
@@ -174,9 +204,9 @@
       function append() {
           console.log("append");
           var logData = document.getElementById("data").value;
-          if (logData.replace(/(^\s*)|(\s*$)/g, "").length ==0) { 
+          if (logData.replace(/(^\s*)|(\s*$)/g, "").length ==0) {
               alert('data不能为空');
-              return; 
+              return;
           }
 
           $.ajax({
@@ -209,15 +239,15 @@
       function getById() {
           console.log("get id");
           var index = document.getElementById("index2").value;
-          if (index.replace(/(^\s*)|(\s*$)/g, "").length ==0) { 
+          if (index.replace(/(^\s*)|(\s*$)/g, "").length ==0) {
               alert('index不能为空');
-              return; 
+              return;
           }
           if (Number.isNaN(Number(index))) {
               alert("index 需要为整数");
               return;
           }
-          var lists = ['n0', 'n1', 'n2'];
+          var lists = ['n0', 'n1', 'n2', 'n3', 'n4'];
           for (let i in lists) {
               let server = lists[i];
               $.ajax({
